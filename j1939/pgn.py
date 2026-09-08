@@ -38,3 +38,9 @@ class J1939Pgn:
     def has_destination_address(self) -> bool:
         """Return True when this PGN uses a destination address."""
         return self.is_pdu1
+
+
+    @property
+    def has_destination_address(self) -> bool:
+        """Return True when this PGN uses a destination address."""
+        return self.is_pdu1
