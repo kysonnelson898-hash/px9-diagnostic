@@ -12,6 +12,7 @@ class J1939Identifier:
     priority: int
     pgn: J1939Pgn | int
     source_address: int
+    _destination_address: int | None = None
 
     def __post_init__(self) -> None:
         if not 0 <= self.priority <= 7:
@@ -32,21 +33,28 @@ class J1939Identifier:
             raise ValueError("Invalid J1939 arbitration ID")
 
         priority = (arbitration_id >> 26) & 0x07
-        pgn = J1939Pgn((arbitration_id >> 8) & 0x3FFFF)
+        raw_pgn = (arbitration_id >> 8) & 0x3FFFF
+        pdu_format = (raw_pgn >> 8) & 0xFF
+        destination_address = None
+
+        if pdu_format < 240:
+            destination_address = raw_pgn & 0xFF
+            raw_pgn &= 0x3FF00
+
+        pgn = J1939Pgn(raw_pgn)
         source_address = arbitration_id & 0xFF
 
         return cls(
             priority=priority,
             pgn=pgn,
             source_address=source_address,
+            _destination_address=destination_address,
         )
 
     @property
     def destination_address(self) -> int | None:
         """Return the destination address for a PDU1 identifier."""
-        if self.pgn.is_pdu1:
-            return (self.pgn.value >> 8) & 0xFF
-        return None
+        return self._destination_address
 
     def to_arbitration_id(self) -> int:
         """Encode this J1939 identifier into a 29-bit CAN arbitration ID."""

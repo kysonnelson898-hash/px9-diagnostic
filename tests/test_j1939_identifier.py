@@ -80,3 +80,10 @@ def test_identifier_accepts_existing_j1939_pgn():
     )
 
     assert identifier.pgn is pgn
+
+
+def test_pdu1_destination_address_is_exposed_from_identifier():
+    identifier = J1939Identifier.from_arbitration_id(0x18EF1234)
+
+    assert identifier.pgn.value == 0x0EF00
+    assert identifier.destination_address == 0x12
