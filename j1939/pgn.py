@@ -32,3 +32,9 @@ class J1939Pgn:
     def is_pdu2(self) -> bool:
         """Return True when this PGN uses the PDU2 format."""
         return self.pdu_format >= 240
+
+
+    @property
+    def has_destination_address(self) -> bool:
+        """Return True when this PGN uses a destination address."""
+        return self.is_pdu1

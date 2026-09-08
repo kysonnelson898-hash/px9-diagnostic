@@ -23,3 +23,11 @@ def test_pgn_classifies_pdu2():
 
     assert pgn.is_pdu1 is False
     assert pgn.is_pdu2 is True
+
+
+def test_pdu1_has_destination_address():
+    assert J1939Pgn(0x00EF00).has_destination_address is True
+
+
+def test_pdu2_does_not_have_destination_address():
+    assert J1939Pgn(0x00F004).has_destination_address is False
