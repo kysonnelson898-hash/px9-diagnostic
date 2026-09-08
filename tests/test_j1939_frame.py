@@ -14,7 +14,7 @@ def test_j1939_frame_decodes_extended_can_frame():
     j1939_frame = J1939Frame.from_can_frame(frame)
 
     assert j1939_frame.identifier.priority == 3
-    assert j1939_frame.identifier.pgn == 0xF004
+    assert j1939_frame.identifier.pgn.value == 0xF004
     assert j1939_frame.identifier.source_address == 0x00
     assert j1939_frame.data == b"\x01\x02\x03\x04"
 

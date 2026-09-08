@@ -11,7 +11,7 @@ def test_valid_j1939_identifier():
     )
 
     assert identifier.priority == 3
-    assert identifier.pgn == 0xF004
+    assert identifier.pgn.value == 0xF004
     assert identifier.source_address == 0x00
 
 
@@ -45,7 +45,7 @@ def test_arbitration_id_round_trip():
     identifier = J1939Identifier.from_arbitration_id(original_id)
 
     assert identifier.priority == 3
-    assert identifier.pgn == 0xF004
+    assert identifier.pgn.value == 0xF004
     assert identifier.source_address == 0x00
     assert identifier.to_arbitration_id() == original_id
 
