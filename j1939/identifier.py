@@ -41,6 +41,13 @@ class J1939Identifier:
             source_address=source_address,
         )
 
+    @property
+    def destination_address(self) -> int | None:
+        """Return the destination address for a PDU1 identifier."""
+        if self.pgn.is_pdu1:
+            return (self.pgn.value >> 8) & 0xFF
+        return None
+
     def to_arbitration_id(self) -> int:
         """Encode this J1939 identifier into a 29-bit CAN arbitration ID."""
         return (
