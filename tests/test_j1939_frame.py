@@ -31,3 +31,15 @@ def test_j1939_frame_rejects_standard_can_frame():
         match="J1939 requires an extended 29-bit CAN identifier",
     ):
         J1939Frame.from_can_frame(frame)
+
+
+def test_j1939_frame_preserves_empty_payload():
+    frame = CanFrame(
+        arbitration_id=0x0CF00400,
+        data=b"",
+        is_extended_id=True,
+    )
+
+    j1939_frame = J1939Frame.from_can_frame(frame)
+
+    assert j1939_frame.data == b""
