@@ -1,4 +1,5 @@
 import pytest
+from j1939.pgn import J1939Pgn
 
 from j1939.identifier import J1939Identifier
 
@@ -56,3 +57,26 @@ def test_invalid_j1939_arbitration_id():
         match="Invalid J1939 arbitration ID",
     ):
         J1939Identifier.from_arbitration_id(0x20000000)
+
+
+def test_identifier_stores_pgn_as_j1939_pgn():
+    identifier = J1939Identifier(
+        priority=3,
+        pgn=0xF004,
+        source_address=0x00,
+    )
+
+    assert isinstance(identifier.pgn, J1939Pgn)
+    assert identifier.pgn.value == 0xF004
+
+
+def test_identifier_accepts_existing_j1939_pgn():
+    pgn = J1939Pgn(0xF004)
+
+    identifier = J1939Identifier(
+        priority=3,
+        pgn=pgn,
+        source_address=0x00,
+    )
+
+    assert identifier.pgn is pgn
