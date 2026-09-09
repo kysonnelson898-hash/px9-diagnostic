@@ -107,3 +107,12 @@ def test_pdu1_identifier_round_trips_arbitration_id():
     identifier = J1939Identifier.from_arbitration_id(0x18EF1234)
 
     assert identifier.to_arbitration_id() == 0x18EF1234
+
+
+def test_pdu1_identifier_round_trip_preserves_destination_and_source():
+    original = 0x18EFAB34
+    identifier = J1939Identifier.from_arbitration_id(original)
+
+    assert identifier.destination_address == 0xAB
+    assert identifier.source_address == 0x34
+    assert identifier.to_arbitration_id() == original
