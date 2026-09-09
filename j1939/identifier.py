@@ -58,8 +58,13 @@ class J1939Identifier:
 
     def to_arbitration_id(self) -> int:
         """Encode this J1939 identifier into a 29-bit CAN arbitration ID."""
-        return (
+        arbitration_id = (
             (self.priority << 26)
             | (self.pgn.value << 8)
             | self.source_address
         )
+
+        if self.pgn.is_pdu1 and self._destination_address is not None:
+            arbitration_id |= self._destination_address << 8
+
+        return arbitration_id

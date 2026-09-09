@@ -87,3 +87,23 @@ def test_pdu1_destination_address_is_exposed_from_identifier():
 
     assert identifier.pgn.value == 0x0EF00
     assert identifier.destination_address == 0x12
+
+
+def test_pdu1_destination_address_is_none_for_broadcast_address():
+    identifier = J1939Identifier.from_arbitration_id(0x18EF00AA)
+
+    assert identifier.pgn.value == 0x0EF00
+    assert identifier.destination_address == 0x00
+
+
+def test_pdu2_destination_address_is_none():
+    identifier = J1939Identifier.from_arbitration_id(0x18F00434)
+
+    assert identifier.pgn.value == 0x0F004
+    assert identifier.destination_address is None
+
+
+def test_pdu1_identifier_round_trips_arbitration_id():
+    identifier = J1939Identifier.from_arbitration_id(0x18EF1234)
+
+    assert identifier.to_arbitration_id() == 0x18EF1234
