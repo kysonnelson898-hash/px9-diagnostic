@@ -126,3 +126,16 @@ def test_pdu2_identifier_round_trip_preserves_pgn_and_source():
     assert identifier.destination_address is None
     assert identifier.source_address == 0x34
     assert identifier.to_arbitration_id() == original
+
+
+def test_identifier_accepts_lowest_and_highest_valid_priority():
+    low = J1939Identifier(priority=0, pgn=0x0F004, source_address=0x34)
+    high = J1939Identifier(priority=7, pgn=0x0F004, source_address=0x34)
+
+    assert low.priority == 0
+    assert high.priority == 7
+
+
+def test_identifier_rejects_priority_above_seven():
+    with pytest.raises(ValueError, match="priority"):
+        J1939Identifier(priority=8, pgn=0x0F004, source_address=0x34)
