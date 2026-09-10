@@ -116,3 +116,13 @@ def test_pdu1_identifier_round_trip_preserves_destination_and_source():
     assert identifier.destination_address == 0xAB
     assert identifier.source_address == 0x34
     assert identifier.to_arbitration_id() == original
+
+
+def test_pdu2_identifier_round_trip_preserves_pgn_and_source():
+    original = 0x18F00434
+    identifier = J1939Identifier.from_arbitration_id(original)
+
+    assert identifier.pgn.value == 0x0F004
+    assert identifier.destination_address is None
+    assert identifier.source_address == 0x34
+    assert identifier.to_arbitration_id() == original
