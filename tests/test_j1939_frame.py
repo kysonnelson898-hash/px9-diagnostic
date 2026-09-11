@@ -43,3 +43,18 @@ def test_j1939_frame_preserves_empty_payload():
     j1939_frame = J1939Frame.from_can_frame(frame)
 
     assert j1939_frame.data == b""
+
+
+def test_j1939_frame_preserves_pdu1_destination_address():
+    frame = CanFrame(
+        arbitration_id=0x18EF1234,
+        data=b"\xAA\xBB",
+        is_extended_id=True,
+    )
+
+    j1939_frame = J1939Frame.from_can_frame(frame)
+
+    assert j1939_frame.identifier.pgn.value == 0xEF00
+    assert j1939_frame.identifier.destination_address == 0x12
+    assert j1939_frame.identifier.source_address == 0x34
+    assert j1939_frame.data == b"\xAA\xBB"
