@@ -27,3 +27,11 @@ class J1939Frame:
             identifier=identifier,
             data=frame.data,
         )
+
+    def to_can_frame(self) -> CanFrame:
+        """Encode this J1939 frame as an extended CAN frame."""
+        return CanFrame(
+            arbitration_id=self.identifier.to_arbitration_id(),
+            data=self.data,
+            is_extended_id=True,
+        )

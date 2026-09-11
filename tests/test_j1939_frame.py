@@ -58,3 +58,18 @@ def test_j1939_frame_preserves_pdu1_destination_address():
     assert j1939_frame.identifier.destination_address == 0x12
     assert j1939_frame.identifier.source_address == 0x34
     assert j1939_frame.data == b"\xAA\xBB"
+
+
+def test_j1939_frame_converts_back_to_can_frame():
+    original = CanFrame(
+        arbitration_id=0x18EF1234,
+        data=b"\xAA\xBB",
+        is_extended_id=True,
+    )
+
+    j1939_frame = J1939Frame.from_can_frame(original)
+    converted = j1939_frame.to_can_frame()
+
+    assert converted.arbitration_id == original.arbitration_id
+    assert converted.data == original.data
+    assert converted.is_extended_id is True
