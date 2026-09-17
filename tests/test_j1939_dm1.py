@@ -11,7 +11,12 @@ def test_decode_dm1_with_one_dtc():
 
     message = decode_dm1(data, source_address=0)
 
-    assert message.lamp_status == bytes([0x01, 0x00])
+    assert message.lamp_status.mil_on is True
+    assert message.lamp_status.mil_flash_rate == 0
+    assert message.lamp_status.red_stop_lamp_on is False
+    assert message.lamp_status.amber_warning_lamp_on is False
+    assert message.lamp_status.protect_lamp_on is False
+
     assert len(message.dtcs) == 1
     assert message.dtcs[0].spn == 190
     assert message.dtcs[0].fmi == 1
@@ -22,7 +27,10 @@ def test_decode_dm1_with_one_dtc():
 def test_decode_dm1_with_no_dtcs():
     message = decode_dm1(bytes([0x00, 0x00]))
 
-    assert message.lamp_status == bytes([0x00, 0x00])
+    assert message.lamp_status.mil_on is False
+    assert message.lamp_status.red_stop_lamp_on is False
+    assert message.lamp_status.amber_warning_lamp_on is False
+    assert message.lamp_status.protect_lamp_on is False
     assert message.dtcs == ()
 
 
