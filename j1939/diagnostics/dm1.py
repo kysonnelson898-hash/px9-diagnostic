@@ -1,4 +1,3 @@
-cd ~/px9-diagnostic && cat > j1939/diagnostics/dm1.py <<'PY'
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -10,12 +9,12 @@ from j1939.diagnostics.dtc_decoder import decode_dm1_dtc
 class Dm1Message:
     """Decoded J1939 DM1 diagnostic message."""
 
-    lamp_status: int
+    lamp_status: bytes
     dtcs: tuple
 
     def __post_init__(self) -> None:
-        if not 0 <= self.lamp_status <= 0xFF:
-            raise ValueError("DM1 lamp status must be between 0 and 255")
+        if len(self.lamp_status) != 2:
+            raise ValueError("DM1 lamp status must contain exactly 2 bytes")
 
 
 def decode_dm1(data: bytes, source_address: int | None = None) -> Dm1Message:
@@ -34,7 +33,6 @@ def decode_dm1(data: bytes, source_address: int | None = None) -> Dm1Message:
     )
 
     return Dm1Message(
-        lamp_status=data[0],
+        lamp_status=data[:2],
         dtcs=dtcs,
     )
-PY
