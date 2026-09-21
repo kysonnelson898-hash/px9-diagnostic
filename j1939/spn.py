@@ -15,8 +15,8 @@ class J1939Spn:
     units: str = ""
 
     def __post_init__(self) -> None:
-        if not 0 <= self.number <= 0x7FFF:
-            raise ValueError("J1939 SPN number must be between 0 and 32767")
+        if not 0 <= self.number <= 0x7FFFF:
+            raise ValueError("J1939 SPN number must be between 0 and 524287")
 
         if self.start_bit < 0:
             raise ValueError("J1939 SPN start bit must be non-negative")
