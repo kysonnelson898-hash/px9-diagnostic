@@ -23,7 +23,6 @@ class AddressClaimMessage:
             priority=priority,
             pgn=ADDRESS_CLAIM_PGN,
             source_address=self.claim.source_address,
-            _destination_address=GLOBAL_DESTINATION,
         )
 
         return CanFrame(
