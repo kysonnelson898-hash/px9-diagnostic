@@ -45,3 +45,33 @@ class J1939Request:
             data=self.requested_pgn.to_bytes(3, byteorder="little"),
             is_extended_id=True,
         )
+
+    @classmethod
+    def from_can_frame(cls, frame: CanFrame) -> "J1939Request":
+        """Decode a J1939 Request CAN frame."""
+        if not frame.is_extended_id:
+            raise ValueError("J1939 Request requires an extended CAN identifier")
+
+        if len(frame.data) != 3:
+            raise ValueError("J1939 Request payload must contain exactly 3 bytes")
+
+        identifier = J1939Identifier.from_arbitration_id(frame.arbitration_id)
+
+        if identifier.pgn.value != REQUEST_PGN:
+            raise ValueError("CAN frame is not a J1939 Request")
+
+        if identifier.destination_address is None:
+            raise ValueError("J1939 Request requires a destination address")
+
+        requested_pgn = int.from_bytes(
+            frame.data,
+            byteorder="little",
+            signed=False,
+        )
+
+        return cls(
+            requested_pgn=requested_pgn,
+            source_address=identifier.source_address,
+            destination_address=identifier.destination_address,
+            priority=identifier.priority,
+        )
