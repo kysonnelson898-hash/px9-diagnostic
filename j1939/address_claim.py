@@ -20,3 +20,10 @@ class J1939AddressClaim:
     def name_bytes(self) -> bytes:
         """Return the 64-bit J1939 NAME in little-endian byte order."""
         return self.name.to_bytes(8, byteorder="little", signed=False)
+
+    def wins_address_claim(self, other: "J1939AddressClaim") -> bool:
+        """Return True when this ECU has higher J1939 NAME priority."""
+        if not isinstance(other, J1939AddressClaim):
+            raise TypeError("other must be a J1939AddressClaim")
+
+        return self.name < other.name
